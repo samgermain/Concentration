@@ -10,31 +10,69 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var flipCount = 0{
+    private var flipCountObs: NSKeyValueObservation?
+    private var scoreObs: NSKeyValueObservation?
+    
+    
+    @objc lazy var game = Concentration(numberOfPairsOfCards: self.cardButtons.count / 2)
+    
+    @IBOutlet private weak var flipCountLabel: UILabel!{
         didSet{
-            flipCountLabel.text = "Flip Count: \(flipCount)"
+            self.updateFlipCountLabel()
         }
     }
-    lazy var game = Concentration(numberOfPairsOfCards: self.cardButtons.count / 2)
+    @IBOutlet weak var scoreLabel: UILabel!
+    @IBOutlet private var cardButtons: [UIButton]!
+
+    override func viewWillAppear(_ animated: Bool) {
+        self.setObservation()
+    }
     
-    @IBOutlet weak var flipCountLabel: UILabel!
-    @IBOutlet var cardButtons: [UIButton]!
+    func setObservation(){
+        self.flipCountObs = self.observe(\.game.flipCount) { _, _ in
+            self.updateFlipCountLabel()
+        }
+        self.scoreObs = self.observe(\.game.score)  { _, _ in
+            self.scoreLabel.text = "Score: \(self.game.score)"
+        }
+    }
+
+    func updateFlipCountLabel(){
+        let attributes: [NSAttributedString.Key:Any] = [
+            .strokeWidth : 5.0,
+            .strokeColor : #colorLiteral(red: 0.3098039329, green: 0.2039215714, blue: 0.03921568766, alpha: 1)
+        ]
+        let attributedString = NSAttributedString(string: "Flip Count:  \(self.game.flipCount)", attributes: attributes)
+        self.flipCountLabel.attributedText = attributedString
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        self.updateViewFromTheme()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        self.flipCountObs = nil
     }
 
-    @IBAction func newGame(_ sender: UIButton) {
-        game = Concentration(numberOfPairsOfCards: cardButtons.count / 2)
+    @IBAction private func newGame(_ sender: UIButton) {
+        self.resetModel()
         self.updateViewFromModel()
-        self.emojiChoices = resetEmojis()
-        self.flipCount = 0
     }
     
+    private func resetModel(){
+        game.prepareForNewGame()
+        self.flipCountObs = nil
+        self.scoreObs = nil
+        game = Concentration(numberOfPairsOfCards: cardButtons.count / 2, theme: game.theme)
+        self.setObservation()
+        self.resetEmojis()
+        
+    }
     
     @IBAction func touchCard(_ sender: UIButton) {
-        flipCount += 1
         if let cardNumber = cardButtons.firstIndex(of: sender){
             game.chooseCard(at: cardNumber)
             self.updateViewFromModel()
@@ -42,7 +80,7 @@ class ViewController: UIViewController {
         
     }
     
-    func updateViewFromModel(){
+    private func updateViewFromModel(){
         for index in self.cardButtons.indices{
             let button = cardButtons[index] //Class so its a reference
             let card = game.cards[index]    //copy
@@ -52,27 +90,50 @@ class ViewController: UIViewController {
                 button.isEnabled = false
             }else{
                 button.setTitle("", for: .normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : game.theme.cardColor
                 button.isEnabled = !card.isMatched
             }
         }
     }
     
-    lazy var emojiChoices = resetEmojis()
+    private lazy var emojiChoices = game.theme.emojiChoices
     
-    func resetEmojis() -> [String]{
-        return ["👻", "🎃", "🦕", "🦑", "🐳", "🐙"]
+    private func resetEmojis(){
+        self.emojiChoices = game.theme.emojiChoices
+        emoji = [Card:String]()
     }
     
-    var emoji = [Int:String]()
+    private var emoji = [Card:String]()
     
-    func emoji(for card: Card) -> String{
-        print(card.identifier)
-        if emoji[card.identifier] == nil, emojiChoices.count > 0{
-            let randIndex = Int(arc4random_uniform(UInt32(emojiChoices.count)))
-            emoji[card.identifier] = emojiChoices.remove(at: randIndex)
+    private func emoji(for card: Card) -> String{
+        if emoji[card] == nil, emojiChoices.count > 0{
+            emoji[card] = emojiChoices.remove(at: emojiChoices.count.arc4random)
         }
-        return emoji[card.identifier] ?? "?"
+        return emoji[card] ?? "?"
+    }
+    
+    @IBAction func changeTheme(_ sender: UIButton) {
+        
+        game.theme = Theme(theme: sender.titleLabel!.text!)
+        self.updateViewFromTheme()
+    }
+    
+    private func updateViewFromTheme(){
+        self.resetEmojis()
+        self.view.backgroundColor = game.theme.backGroundColor
+        for button in self.cardButtons{
+            if !buttonIsFaceUpOrMatched(button){
+                button.backgroundColor = game.theme.cardColor
+            }
+        }
+    }
+    
+    private func buttonIsFaceUpOrMatched(_ button: UIButton) -> Bool{
+        if let cardIndex = cardButtons.firstIndex(of: button){
+            return game.cards[cardIndex].isFaceUp || game.cards[cardIndex].isMatched
+        }else{
+            return false
+        }
     }
     
 }

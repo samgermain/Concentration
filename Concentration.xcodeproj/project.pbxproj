@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22106499235FBE820034E965 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22106498235FBE820034E965 /* Theme.swift */; };
+		2210649B235FE0450034E965 /* Int_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2210649A235FE0450034E965 /* Int_Extension.swift */; };
+		2210649D235FEBE20034E965 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2210649C235FEBE20034E965 /* File.swift */; };
 		222BBDC9235D55C70087B2FC /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222BBDC8235D55C70087B2FC /* Card.swift */; };
 		222BBDCB235D56610087B2FC /* Concentration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222BBDCA235D56610087B2FC /* Concentration.swift */; };
 		22857E56235D26B500F8AF46 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22857E55235D26B500F8AF46 /* AppDelegate.swift */; };
@@ -37,6 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22106498235FBE820034E965 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		2210649A235FE0450034E965 /* Int_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Int_Extension.swift; sourceTree = "<group>"; };
+		2210649C235FEBE20034E965 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		222BBDC8235D55C70087B2FC /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		222BBDCA235D56610087B2FC /* Concentration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Concentration.swift; sourceTree = "<group>"; };
 		22857E52235D26B500F8AF46 /* Concentration.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Concentration.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +91,9 @@
 			children = (
 				222BBDC8235D55C70087B2FC /* Card.swift */,
 				222BBDCA235D56610087B2FC /* Concentration.swift */,
+				22106498235FBE820034E965 /* Theme.swift */,
+				2210649A235FE0450034E965 /* Int_Extension.swift */,
+				2210649C235FEBE20034E965 /* File.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -274,8 +283,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				22857E5A235D26B500F8AF46 /* ViewController.swift in Sources */,
+				22106499235FBE820034E965 /* Theme.swift in Sources */,
 				222BBDCB235D56610087B2FC /* Concentration.swift in Sources */,
 				22857E56235D26B500F8AF46 /* AppDelegate.swift in Sources */,
+				2210649B235FE0450034E965 /* Int_Extension.swift in Sources */,
+				2210649D235FEBE20034E965 /* File.swift in Sources */,
 				22857E58235D26B500F8AF46 /* SceneDelegate.swift in Sources */,
 				222BBDC9235D55C70087B2FC /* Card.swift in Sources */,
 			);
