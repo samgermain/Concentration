@@ -20,7 +20,6 @@ class Concentration: NSObject{
             }
         }
     }
-    public var theme = Theme(theme: "Birds")
     @objc dynamic var flipCount = 0
     @objc dynamic var score = 0
     
@@ -50,13 +49,6 @@ class Concentration: NSObject{
         }
         flipCount += 1
     }
-    
-    convenience init(numberOfPairsOfCards: Int, theme: Theme){
-        self.init(numberOfPairsOfCards: numberOfPairsOfCards)
-        self.theme = theme
-    }
-    
-    
     
     init(numberOfPairsOfCards: Int){
         for _ in 0..<numberOfPairsOfCards{

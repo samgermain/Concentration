@@ -8,11 +8,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ConcentrationViewController: UIViewController {
 
     private var flipCountObs: NSKeyValueObservation?
     private var scoreObs: NSKeyValueObservation?
     
+    public var theme: Theme!{
+        didSet{
+            self.updateViewFromTheme()
+        }
+    }
     
     @objc lazy var game = Concentration(numberOfPairsOfCards: self.cardButtons.count / 2)
     
@@ -66,7 +71,7 @@ class ViewController: UIViewController {
         game.prepareForNewGame()
         self.flipCountObs = nil
         self.scoreObs = nil
-        game = Concentration(numberOfPairsOfCards: cardButtons.count / 2, theme: game.theme)
+        game = Concentration(numberOfPairsOfCards: cardButtons.count / 2)
         self.setObservation()
         self.resetEmojis()
         
@@ -90,16 +95,16 @@ class ViewController: UIViewController {
                 button.isEnabled = false
             }else{
                 button.setTitle("", for: .normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : game.theme.cardColor
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : theme.cardColor
                 button.isEnabled = !card.isMatched
             }
         }
     }
     
-    private lazy var emojiChoices = game.theme.emojiChoices
+    private lazy var emojiChoices = theme.emojiChoices
     
     private func resetEmojis(){
-        self.emojiChoices = game.theme.emojiChoices
+        self.emojiChoices = theme.emojiChoices
         emoji = [Card:String]()
     }
     
@@ -114,16 +119,16 @@ class ViewController: UIViewController {
     
     @IBAction func changeTheme(_ sender: UIButton) {
         
-        game.theme = Theme(theme: sender.titleLabel!.text!)
+        theme = Theme(theme: sender.titleLabel!.text!)
         self.updateViewFromTheme()
     }
     
     private func updateViewFromTheme(){
         self.resetEmojis()
-        self.view.backgroundColor = game.theme.backGroundColor
+        self.view.backgroundColor = theme.backGroundColor
         for button in self.cardButtons{
             if !buttonIsFaceUpOrMatched(button){
-                button.backgroundColor = game.theme.cardColor
+                    button.backgroundColor = theme.cardColor
             }
         }
     }
